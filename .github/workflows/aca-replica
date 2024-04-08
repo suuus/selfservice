@@ -17,7 +17,7 @@ on:
         type: string
       maxreplica:
         required: true
-        description: "Minimum Replica"
+        description: "Maximum Replica"
         type: string
 
 jobs:
