@@ -1,0 +1,37 @@
+name: Azure Container Apps Job with trigger manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      jobname:
+        required: true
+        description: "Job Name"
+        type: string
+      rgname:
+        required: true
+        description: "Resource Group"
+        type: string
+      image:
+        required: true
+        default: cr.microsoft.com/k8se/quickstart-jobs:latest
+        description: "Minimum Replica"
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Container App Job ${{ github.event.inputs.jobname }}
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az containerapp job create --name ${{ github.event.inputs.jobname }} --resource-group ${{ github.event.inputs.rgname }} --trigger-type "Manual" --replica-timeout 1800 --image "mcr.microsoft.com/k8se/quickstart-jobs:latest" --cpu "0.25" --memory "0.5Gi"
