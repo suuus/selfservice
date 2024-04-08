@@ -1,0 +1,36 @@
+name: Restart Azure App Service
+
+on:
+  workflow_dispatch:
+    inputs:
+      appname:
+        required: true
+        description: "AppName"
+        type: string
+      rgname:
+        required: true
+        description: "Resource Group"
+        type: string
+      revname:
+        required: true
+        description: "Revision"
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Restart ContainerApp with revision ${{ github.event.inputs.revname }}
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az containerapp revision restart -n ${{ github.event.inputs.appname }} -g ${{ github.event.inputs.rgname }} --revision ${{ github.event.inputs.revname }}
