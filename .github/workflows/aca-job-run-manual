@@ -1,0 +1,32 @@
+name: Azure Container Apps Job with run manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      jobname:
+        required: true
+        description: "Job Name"
+        type: string
+      rgname:
+        required: true
+        description: "Resource Group"
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Container App Job ${{ github.event.inputs.jobname }}
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az containerapp job start --name ${{ github.event.inputs.jobname }} --resource-group ${{ github.event.inputs.rgname }}
