@@ -1,4 +1,4 @@
-name: Azure Container Apps Job with run manual
+name: Azure Container Apps run manual job
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create Container App Job ${{ github.event.inputs.jobname }}
+    - name: Run Container App job ${{ github.event.inputs.jobname }}
       uses: azure/CLI@v1
       with:
         inlineScript: |
