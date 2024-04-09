@@ -14,7 +14,7 @@ on:
       image:
         required: true
         default: cr.microsoft.com/k8se/quickstart-jobs:latest
-        description: "Minimum Replica"
+        description: "Image"
         type: string
 
 permissions:
